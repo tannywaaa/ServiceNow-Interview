@@ -76,7 +76,6 @@ class App extends Component {
             (incidents_all && incidents_all.message) || res.statusText;
           return Promise.reject(error);
         } else {
-          console.log(incidents_all[0]);
           this.setState({ incidents_all });
         }
       })
@@ -105,22 +104,41 @@ class App extends Component {
     }
     return (
       <div className="content">
-        <button onClick={() => this.get_data_by_state("Open")}>
-          By State Open {this.state.open}
-        </button>
-        <button onClick={() => this.get_data_by_state("In Progress")}>
-          By State In Progress {this.state.inprogress}
-        </button>
-        <button onClick={() => this.get_data_by_state("Closed")}>
-          By State Closed {this.state.closed}
-        </button>
-        <button onClick={() => this.get_data_by_state("Resolved")}>
-          By State Resolved {this.state.resolved}
-        </button>
-
         <h3>At A Glance</h3>
-        <Card href="/" title={"aaa"} />
+        <div
+          onClick={() => {
+            this.get_data_by_state("Open");
+          }}
+        >
+          {" "}
+          <Card title={"State Open"} body={this.state.open} />
+        </div>
+        <div
+          onClick={() => {
+            this.get_data_by_state("In Progress");
+          }}
+        >
+          {" "}
+          <Card title={"State In Progress"} body={this.state.inprogress} />
+        </div>
+        <div
+          onClick={() => {
+            this.get_data_by_state("Closed");
+          }}
+        >
+          {" "}
+          <Card title={"State Resolved"} body={this.state.closed} />
+        </div>
+        <div
+          onClick={() => {
+            this.get_data_by_state("Resolved");
+          }}
+        >
+          {" "}
+          <Card title={"State Open"} body={this.state.resolved} />
+        </div>
         <h3>All Incidents</h3>
+
         {this.incident_table(displayrows)}
       </div>
     );
