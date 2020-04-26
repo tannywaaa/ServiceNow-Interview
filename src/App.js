@@ -4,7 +4,7 @@ import { Table } from "react-bootstrap";
 import Card from "./components/Card";
 
 const URL =
-  "https://servicenow-ui-coding-challenge-api.netlify.app/.netlify/functions/server/incidents";
+  "https://servicenow-ui-coding-challenge-api.netlify.app/.netlify/functions/server";
 
 class App extends Component {
   constructor(props) {
@@ -18,38 +18,67 @@ class App extends Component {
     };
   }
   async componentDidMount() {
-    const res = await fetch(URL);
-    const api = await res.json();
-    const incidents_all = api;
+    this.get_all_data();
+  }
+  get_all_data = () => {
+    fetch(URL + "/incidents").then(async res => {
+      const api = await res.json();
+      const incidents_all = api;
 
-    console.log(incidents_all[0]);
-    let open = 0,
-      inprogress = 0,
-      resolved = 0,
-      closed = 0;
+      if (!res.ok) {
+        // get error message from body or default to response statusText
+        const error =
+          (incidents_all && incidents_all.message) || res.statusText;
+        return Promise.reject(error);
+      } else {
+        let open = 0,
+          inprogress = 0,
+          resolved = 0,
+          closed = 0;
 
-    api.forEach(element => {
-      if (element.state === "Open") {
-        open++;
-      } else if (element.state === "In Progress") {
-        inprogress++;
-      } else if (element.state === "Resolved") {
-        resolved++;
-      } else if (element.state === "Closed") {
-        closed++;
+        api.forEach(element => {
+          if (element.state === "Open") {
+            open++;
+          } else if (element.state === "In Progress") {
+            inprogress++;
+          } else if (element.state === "Resolved") {
+            resolved++;
+          } else if (element.state === "Closed") {
+            closed++;
+          }
+        });
+        console.log("open", open);
+
+        this.setState({
+          incidents_all,
+          open: open,
+          inprogress: inprogress,
+          resolved: resolved,
+          closed: closed
+        });
       }
     });
-    console.log("open", open);
+  };
+  get_data_by_state = state_requested => {
+    fetch(URL + "/incidentsByState?state=" + state_requested).then(
+      async res => {
+        const api = await res.json();
+        const incidents_all = api;
 
-    this.setState({
-      incidents_all,
-      open: open,
-      inprogress: inprogress,
-      resolved: resolved,
-      closed: closed
-    });
-  }
+        // check for error response
+        if (!res.ok) {
+          const error =
+            (incidents_all && incidents_all.message) || res.statusText;
+          return Promise.reject(error);
+        } else {
+          console.log(incidents_all[0]);
+          this.setState({ incidents_all });
+        }
+      }
+    );
+  };
   render() {
+    if (this.state.incidents_all == null) return <div />;
     let displayrows = [];
     let item = this.state.incidents_all;
 
@@ -67,7 +96,20 @@ class App extends Component {
       displayrows.push(temp_row_element);
     }
     return (
-      <div className="App">
+      <div className="content">
+        <button onClick={() => this.get_data_by_state("Open")}>
+          By State Open {this.state.open}
+        </button>
+        <button onClick={() => this.get_data_by_state("In Progress")}>
+          By State In Progress {this.state.inprogress}
+        </button>
+        <button onClick={() => this.get_data_by_state("Closed")}>
+          By State Closed {this.state.closed}
+        </button>
+        <button onClick={() => this.get_data_by_state("Resolved")}>
+          By State Resolved {this.state.resolved}
+        </button>
+
         <h3>At A Glance</h3>
         <Card href="/" title={"aaa"} />
         <h3>All Incidents</h3>
