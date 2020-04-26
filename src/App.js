@@ -10,14 +10,44 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      incidents_all: []
+      incidents_all: [],
+      open: [],
+      inprogress: [],
+      resolved: [],
+      closed: []
     };
   }
   async componentDidMount() {
     const res = await fetch(URL);
     const api = await res.json();
     const incidents_all = api;
-    this.setState({ incidents_all });
+
+    console.log(incidents_all[0]);
+    let open = 0,
+      inprogress = 0,
+      resolved = 0,
+      closed = 0;
+
+    api.forEach(element => {
+      if (element.state === "Open") {
+        open++;
+      } else if (element.state === "In Progress") {
+        inprogress++;
+      } else if (element.state === "Resolved") {
+        resolved++;
+      } else if (element.state === "Closed") {
+        closed++;
+      }
+    });
+    console.log("open", open);
+
+    this.setState({
+      incidents_all,
+      open: open,
+      inprogress: inprogress,
+      resolved: resolved,
+      closed: closed
+    });
   }
   render() {
     let displayrows = [];
@@ -39,7 +69,7 @@ class App extends Component {
     return (
       <div className="App">
         <h3>At A Glance</h3>
-        <Card title={"aaa"} />
+        <Card href="/" title={"aaa"} />
         <h3>All Incidents</h3>
         {this.incident_table(displayrows)}
       </div>
