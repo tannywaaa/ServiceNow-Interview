@@ -1,20 +1,65 @@
 import React, { Component } from "react";
 import "./App.css";
 import { Table } from "react-bootstrap";
-import Card from "./components/Card";
+import Card from "./components/card";
+import TableByState from "./components/table_by_state";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 const URL =
   "https://servicenow-ui-coding-challenge-api.netlify.app/.netlify/functions/server";
-
 class App extends Component {
+  render() {
+    return (
+      <div className="content">
+        <Router>
+          <div>
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/open">Open</Link>
+              </li>
+              <li>
+                <Link to="/inprogress">In Progress</Link>
+              </li>
+              <li>
+                <Link to="/closed">Closed</Link>
+              </li>
+              <li>
+                <Link to="/resolved">Resolved</Link>
+              </li>
+            </ul>
+
+            <hr />
+            <Switch>
+              <Route exact path="/">
+                <Home />
+              </Route>
+              <Route path="/open">
+                <TableByState state={"Open"} />
+              </Route>
+              <Route path="/inprogress">
+                <TableByState state={"In Progress"} />
+              </Route>
+              <Route path="/closed">
+                <TableByState state={"Closed"} />
+              </Route>
+              <Route path="/resolved">
+                <TableByState state={"Resolved"} />
+              </Route>
+            </Switch>
+          </div>
+        </Router>
+      </div>
+    );
+  }
+}
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      incidents_all: [],
-      open: [],
-      inprogress: [],
-      resolved: [],
-      closed: []
+      incidents_all: []
     };
   }
   async componentDidMount() {
@@ -64,26 +109,6 @@ class App extends Component {
         console.error("There was an error!", error);
       });
   };
-  get_data_by_state = state_requested => {
-    fetch(URL + "/incidentsByState?state=" + state_requested)
-      .then(async res => {
-        const api = await res.json();
-        const incidents_all = api;
-
-        // check for error response
-        if (!res.ok) {
-          const error =
-            (incidents_all && incidents_all.message) || res.statusText;
-          return Promise.reject(error);
-        } else {
-          this.setState({ incidents_all });
-        }
-      })
-      .catch(error => {
-        // this.setState({ errorMessage: error });
-        console.error("There was an error!", error);
-      });
-  };
   render() {
     if (this.state.incidents_all == null) return <div />;
     let displayrows = [];
@@ -91,7 +116,7 @@ class App extends Component {
 
     for (let i = 0; i < item.length; i++) {
       let temp_row_element = (
-        <tr>
+        <tr key={"all incidents" + i}>
           <td>{item[i].number}</td>
           <td>{item[i].priority}</td>
           <td>{item[i].short_description}</td>
@@ -103,41 +128,8 @@ class App extends Component {
       displayrows.push(temp_row_element);
     }
     return (
-      <div className="content">
+      <div>
         <h3>At A Glance</h3>
-        <div
-          onClick={() => {
-            this.get_data_by_state("Open");
-          }}
-        >
-          {" "}
-          <Card title={"State Open"} body={this.state.open} />
-        </div>
-        <div
-          onClick={() => {
-            this.get_data_by_state("In Progress");
-          }}
-        >
-          {" "}
-          <Card title={"State In Progress"} body={this.state.inprogress} />
-        </div>
-        <div
-          onClick={() => {
-            this.get_data_by_state("Closed");
-          }}
-        >
-          {" "}
-          <Card title={"State Resolved"} body={this.state.closed} />
-        </div>
-        <div
-          onClick={() => {
-            this.get_data_by_state("Resolved");
-          }}
-        >
-          {" "}
-          <Card title={"State Open"} body={this.state.resolved} />
-        </div>
-        <h3>All Incidents</h3>
 
         {this.incident_table(displayrows)}
       </div>
@@ -164,5 +156,4 @@ class App extends Component {
     );
   };
 }
-
 export default App;
