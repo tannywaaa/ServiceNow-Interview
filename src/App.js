@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import { Table, Col, Row } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import Card from "./components/card";
 import TableByState from "./components/table_by_state";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -44,7 +44,8 @@ class Home extends Component {
       open: [],
       inprogress: [],
       resolved: [],
-      closed: []
+      closed: [],
+      addShow: false
     };
   }
   async componentDidMount() {
@@ -116,38 +117,38 @@ class Home extends Component {
       <div className="content">
         <h3>At A Glance</h3>
         <Link to="/">Home</Link>
-        <Row>
-          <Col>
-            <Link to="/open" style={{ color: "black", textDecoration: "none" }}>
-              <Card title={"Open"} number={this.state.open} />
-            </Link>
-          </Col>
-          <Col>
-            <Link
-              to="/inprogress"
-              style={{ color: "black", textDecoration: "none" }}
-            >
-              <Card title={"In Progress"} />
-            </Link>
-          </Col>
-          <Col>
-            <Link
-              to="/closed"
-              style={{ color: "black", textDecoration: "none" }}
-            >
-              <Card title={"Closed"} />
-            </Link>
-          </Col>
-          <Col>
-            <Link
-              to="/resolved"
-              style={{ color: "black", textDecoration: "none" }}
-            >
-              <Card title={"Resolved"} />
-            </Link>
-          </Col>
-        </Row>
+
+        <Link
+          to="/open"
+          style={{ color: "black", textDecoration: "none", padding: "0" }}
+        >
+          <Card title={"Open"} number={this.state.open} />
+        </Link>
+
+        <Link
+          to="/inprogress"
+          style={{ color: "black", textDecoration: "none" }}
+        >
+          <Card title={"In Progress"} />
+        </Link>
+
+        <Link to="/closed" style={{ color: "black", textDecoration: "none" }}>
+          <Card title={"Closed"} />
+        </Link>
+
+        <Link to="/resolved" style={{ color: "black", textDecoration: "none" }}>
+          <Card title={"Resolved"} />
+        </Link>
+
         {this.incident_table(displayrows)}
+
+        <button
+          onClick={() => {
+            this.setState({ addShow: !this.state.addShow });
+          }}
+        >
+          Create A New Incident
+        </button>
       </div>
     );
   }
@@ -167,9 +168,71 @@ class Home extends Component {
             </tr>
           </thead>
           <tbody>{row_item}</tbody>
+          {this.state.addShow ? this.add_row() : <div></div>}
         </Table>
       </div>
     );
+  };
+  add_row = () => {
+    return (
+      <tr>
+        <td>
+          <input type="text" id="number" name="number"></input>
+        </td>
+        <td>
+          <input type="text" id="priority" name="priority"></input>
+        </td>
+        <td>
+          <input type="text" id="sdescription" name="description"></input>
+        </td>
+        <td>
+          <input type="text" id="category" name="category"></input>
+        </td>
+        <td>
+          <input type="text" id="state" name="state"></input>
+        </td>
+        <td>
+          <input type="text" id="created" name="created"></input>
+        </td>
+        <td>
+          <button
+            variant="primary"
+            onClick={() => {
+              this.add_new_incident();
+            }}
+          >
+            Submit
+          </button>
+        </td>
+      </tr>
+    );
+  };
+
+  insert_incident = (
+    number,
+    priority,
+    short_description,
+    category,
+    state,
+    date
+  ) => {
+    //parameters for insertion:
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        number: number,
+        priority: priority,
+        short_description: short_description,
+        category: category,
+        state: state,
+        created: date
+      })
+    };
+    //Attempt to insert
+    fetch(URL + "/insertIncident", requestOptions)
+      .then(response => response.json())
+      .then(data => this.setState({ postId: data.id }));
   };
 }
 export default App;
