@@ -8,11 +8,7 @@ export class table_by_state extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      incidents_all: [],
-      open: [],
-      inprogress: [],
-      resolved: [],
-      closed: []
+      incidents_all: []
     };
   }
 

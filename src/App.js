@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import { Table } from "react-bootstrap";
+import { Table, Col, Row } from "react-bootstrap";
 import Card from "./components/card";
 import TableByState from "./components/table_by_state";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -10,28 +10,9 @@ const URL =
 class App extends Component {
   render() {
     return (
-      <div className="content">
+      <div>
         <Router>
           <div>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/open">Open</Link>
-              </li>
-              <li>
-                <Link to="/inprogress">In Progress</Link>
-              </li>
-              <li>
-                <Link to="/closed">Closed</Link>
-              </li>
-              <li>
-                <Link to="/resolved">Resolved</Link>
-              </li>
-            </ul>
-
-            <hr />
             <Switch>
               <Route exact path="/">
                 <Home />
@@ -59,7 +40,11 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      incidents_all: []
+      incidents_all: [],
+      open: [],
+      inprogress: [],
+      resolved: [],
+      closed: []
     };
   }
   async componentDidMount() {
@@ -128,9 +113,40 @@ class Home extends Component {
       displayrows.push(temp_row_element);
     }
     return (
-      <div>
+      <div className="content">
         <h3>At A Glance</h3>
-
+        <Link to="/">Home</Link>
+        <Row>
+          <Col>
+            <Link to="/open" style={{ color: "black", textDecoration: "none" }}>
+              <Card title={"Open"} number={this.state.open} />
+            </Link>
+          </Col>
+          <Col>
+            <Link
+              to="/inprogress"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              <Card title={"In Progress"} />
+            </Link>
+          </Col>
+          <Col>
+            <Link
+              to="/closed"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              <Card title={"Closed"} />
+            </Link>
+          </Col>
+          <Col>
+            <Link
+              to="/resolved"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              <Card title={"Resolved"} />
+            </Link>
+          </Col>
+        </Row>
         {this.incident_table(displayrows)}
       </div>
     );

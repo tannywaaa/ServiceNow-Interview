@@ -5,16 +5,11 @@ export default class Card extends Component {
     return (
       <div>
         <div className="card">
-          <p style={{ paddingLeft: "5%" }}>{this.props.title}</p>
-          <hr
-            style={{
-              height: "1px",
-              width: "70%",
-              color: "gray",
-              backgroundColor: "gray",
-              marginTop: "0.1%"
-            }}
-          />
+          <p style={{ paddingLeft: "5%", marginBottom: "0" }}>
+            {this.props.title}
+          </p>
+          <hr className="horizontal_line" />
+          <div class="container">{this.props.number}</div>
         </div>
       </div>
     );
