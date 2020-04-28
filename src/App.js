@@ -158,12 +158,12 @@ class Home extends Component {
       <div className="content">
         <h5>At A Glance</h5>
         <Row>
-          <Col>
+          <Col xs={6} lg={3}>
             <Link to="/open" style={{ color: "black", textDecoration: "none" }}>
               <Card title={"Open"} number={this.state.open} />
             </Link>
           </Col>
-          <Col>
+          <Col xs={6} lg={3}>
             <Link
               to="/inprogress"
               style={{ color: "black", textDecoration: "none" }}
@@ -171,7 +171,7 @@ class Home extends Component {
               <Card title={"In Progress"} number={this.state.inprogress} />
             </Link>
           </Col>
-          <Col>
+          <Col xs={6} lg={3}>
             <Link
               to="/closed"
               style={{ color: "black", textDecoration: "none" }}
@@ -179,7 +179,7 @@ class Home extends Component {
               <Card title={"Closed"} number={this.state.closed} />
             </Link>
           </Col>
-          <Col>
+          <Col xs={6} lg={3}>
             <Link
               to="/resolved"
               style={{ color: "black", textDecoration: "none" }}
