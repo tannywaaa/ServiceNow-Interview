@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import { Table, Form } from "react-bootstrap";
+import { Table, Form, Row, Col } from "react-bootstrap";
 import Card from "./components/card";
 import TableByState from "./components/table_by_state";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -156,31 +156,41 @@ class Home extends Component {
     }
     return (
       <div className="content">
-        <h3>At A Glance</h3>
-        <Link to="/">Home</Link>
-
-        <Link
-          to="/open"
-          style={{ color: "black", textDecoration: "none", padding: "0" }}
-        >
-          <Card title={"Open"} number={this.state.open} />
-        </Link>
-
-        <Link
-          to="/inprogress"
-          style={{ color: "black", textDecoration: "none" }}
-        >
-          <Card title={"In Progress"} />
-        </Link>
-
-        <Link to="/closed" style={{ color: "black", textDecoration: "none" }}>
-          <Card title={"Closed"} />
-        </Link>
-
-        <Link to="/resolved" style={{ color: "black", textDecoration: "none" }}>
-          <Card title={"Resolved"} />
-        </Link>
-
+        <h5>At A Glance</h5>
+        <Row>
+          <Col>
+            <Link to="/open" style={{ color: "black", textDecoration: "none" }}>
+              <Card title={"Open"} number={this.state.open} />
+            </Link>
+          </Col>
+          <Col>
+            <Link
+              to="/inprogress"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              <Card title={"In Progress"} number={this.state.inprogress} />
+            </Link>
+          </Col>
+          <Col>
+            <Link
+              to="/closed"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              <Card title={"Closed"} number={this.state.closed} />
+            </Link>
+          </Col>
+          <Col>
+            <Link
+              to="/resolved"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              <Card title={"Resolved"} number={this.state.resolved} />
+            </Link>
+          </Col>
+        </Row>
+        <br />
+        <br />
+        <h5>All incidents</h5>
         {this.incident_table(displayrows)}
 
         <button

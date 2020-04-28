@@ -8,7 +8,8 @@ export class table_by_state extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      incidents_all: []
+      incidents_all: [],
+      count: 0
     };
   }
 
@@ -34,7 +35,8 @@ export class table_by_state extends Component {
             (incidents_all && incidents_all.message) || res.statusText;
           return Promise.reject(error);
         } else {
-          this.setState({ incidents_all });
+          let count_number = incidents_all.length;
+          this.setState({ incidents_all, count: count_number });
         }
       })
       .catch(error => {
@@ -65,9 +67,16 @@ export class table_by_state extends Component {
       displayrows.push(temp_row_element);
     }
     return (
-      <div>
-        <Link to="/">Home</Link>
-        <h3>All Incidents</h3>
+      <div className="content">
+        <h2>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            ◂☰
+          </Link>
+          {this.props.state} &nbsp;
+          <small>{this.state.count}</small>
+        </h2>
+
+        <br />
         {this.incident_table(displayrows)}
       </div>
     );
