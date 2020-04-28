@@ -9,7 +9,7 @@ export default class Card extends Component {
             {this.props.title}
           </p>
           <hr className="horizontal_line" />
-          <div class="container">
+          <div className="container">
             <h4>{this.props.number}</h4>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Table } from "react-bootstrap";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const URL =
   "https://servicenow-ui-coding-challenge-api.netlify.app/.netlify/functions/server";

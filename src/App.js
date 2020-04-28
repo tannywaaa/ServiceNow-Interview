@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import { Table, Form, Row, Col } from "react-bootstrap";
+import { Table, Row, Col } from "react-bootstrap";
 import Card from "./components/card";
 import TableByState from "./components/table_by_state";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -312,7 +312,15 @@ class Home extends Component {
       "https://servicenow-ui-coding-challenge-api.netlify.app/.netlify/functions/server/insertIncident",
       requestOptions
     )
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          const error = response.statusText;
+          alert(error);
+          return Promise.reject(error);
+        }
+
+        response.json();
+      })
       .then(data => this.get_all_data());
   };
 }
