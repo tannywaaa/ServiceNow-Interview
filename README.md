@@ -4,6 +4,8 @@ This repository includes all files for ServiceNow Coding Test.
 
 Files mostly modified: App.js, App.css, componments/cars.js, componments/table_by_state.js
 
+Video Demo: https://youtu.be/71Cw4MVIzrQ
+
 ## Installation
 
 Download the folder
@@ -52,10 +54,11 @@ Libries: Bootstrap
 1. This app has the same theme as provided, and they look very similar
 
 2. State Management: 
- o What happens if your components/pages are loading?
 o What if there’s an error communicating with the server?
-o What if fetches return empty?
+Here is the sample of the error checking communicating with the server
+
+![error_check](https://user-images.githubusercontent.com/29969808/80449400-e8986580-88d3-11ea-8acf-e98c82145336.png)
 
 3. New Incident: STRY0002: As an IT service agent, I would like to be able to open a new
-incident, in case something new has been reported. Details see from explaination video: 
-
+incident, in case something new has been reported. 
+![add](https://user-images.githubusercontent.com/29969808/80451054-c0ab0100-88d7-11ea-97d3-56cedd65e8b0.png)
