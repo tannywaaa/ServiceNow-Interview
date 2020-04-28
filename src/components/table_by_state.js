@@ -23,6 +23,7 @@ export class table_by_state extends Component {
   componentDidMount() {
     this.get_data_by_state(this.props.state);
   }
+  //get data based on its state inserted in app.js
   get_data_by_state = state_requested => {
     fetch(URL + "/incidentsByState?state=" + state_requested)
       .then(async res => {

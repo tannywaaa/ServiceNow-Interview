@@ -79,7 +79,7 @@ class Home extends Component {
             inprogress = 0,
             resolved = 0,
             closed = 0;
-
+          //counting the number of items in each state
           api.forEach(element => {
             if (element.state === "Open") {
               open++;
@@ -91,7 +91,6 @@ class Home extends Component {
               closed++;
             }
           });
-          console.log("open", open);
 
           this.setState({
             incidents_all,
@@ -107,6 +106,8 @@ class Home extends Component {
         console.error("There was an error!", error);
       });
   };
+
+  //save text for add new incidents
   handleChange = event => {
     this.setState({ number: event.target.value });
   };
@@ -123,6 +124,7 @@ class Home extends Component {
     this.setState({ state: event.target.value });
   };
 
+  //create post request when clicking on submit button
   handleSubmit = event => {
     this.insert_incident(
       this.state.number,
@@ -140,7 +142,7 @@ class Home extends Component {
     if (this.state.incidents_all == null) return <div />;
     let displayrows = [];
     let item = this.state.incidents_all;
-
+    //temp_row_element has all elements by column
     for (let i = 0; i < item.length; i++) {
       let temp_row_element = (
         <tr key={"all incidents" + i}>
@@ -157,6 +159,7 @@ class Home extends Component {
     return (
       <div className="content">
         <h5>At A Glance</h5>
+        {/* here is the cards being created at the top of the page */}
         <Row>
           <Col xs={6} lg={3}>
             <Link to="/open" style={{ color: "black", textDecoration: "none" }}>
@@ -192,7 +195,7 @@ class Home extends Component {
         <br />
         <h5>All incidents</h5>
         {this.incident_table(displayrows)}
-
+        {/* when click on the button activates or deactivates the new row for adding new incident */}
         <button
           onClick={() => {
             this.setState({ addShow: !this.state.addShow });
@@ -218,6 +221,7 @@ class Home extends Component {
               <th>Created</th>
             </tr>
           </thead>
+          {/* display table of all fetched incident data with functionality of adding new row */}
           <tbody>{row_item}</tbody>
           {this.state.addShow ? this.add_row() : <div></div>}
         </Table>
@@ -262,16 +266,6 @@ class Home extends Component {
             value={this.state.state}
             onChange={this.handleChange5}
           />
-          {/* <Form.Control
-            as="select"
-            value={this.state.state}
-            onChange={this.handleChange5}
-          >
-            <option>Open</option>
-            <option>In Progress</option>
-            <option>Closed</option>
-            <option>Resolved</option>
-          </Form.Control> */}
         </td>
         <td>{this.state.created}</td>
 
@@ -283,7 +277,7 @@ class Home extends Component {
       </tr>
     );
   };
-
+  // post request for insert incident
   insert_incident = (
     number,
     priority,
