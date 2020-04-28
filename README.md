@@ -1,6 +1,7 @@
 # Overview
 
 This repository includes all files for ServiceNow Coding Test.
+
 Files mostly modified: App.js, App.css, componments/cars.js, componments/table_by_state.js
 
 ## Installation
@@ -17,8 +18,8 @@ npm install
 npm start
 ```
 
-```bash
 To Home Page: 
+```bash
 http://localhost:8082/
 ```
 ## Re-useable Components
