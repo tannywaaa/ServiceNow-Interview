@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import { Table } from "react-bootstrap";
+import { Table, Form } from "react-bootstrap";
 import Card from "./components/card";
 import TableByState from "./components/table_by_state";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -41,17 +41,29 @@ class Home extends Component {
     super(props);
     this.state = {
       incidents_all: [],
+      //below states are used to count # for each state
       open: [],
       inprogress: [],
       resolved: [],
       closed: [],
-      addShow: false
+      addShow: false,
+      //the below states are used for insert incidents
+      number: " ",
+      priority: " ",
+      description: " ",
+      category: " ",
+      state: " ",
+      created: new Date()
+        .toJSON()
+        .slice(0, 10)
+        .replace(/-/g, "-")
     };
   }
   async componentDidMount() {
     this.get_all_data();
   }
   get_all_data = () => {
+    console.log("getting all data");
     fetch(URL + "/incidents")
       .then(async res => {
         const api = await res.json();
@@ -94,6 +106,35 @@ class Home extends Component {
         // this.setState({ errorMessage: error });
         console.error("There was an error!", error);
       });
+  };
+  handleChange = event => {
+    this.setState({ number: event.target.value });
+  };
+  handleChange2 = event => {
+    this.setState({ priority: event.target.value });
+  };
+  handleChange3 = event => {
+    this.setState({ description: event.target.value });
+  };
+  handleChange4 = event => {
+    this.setState({ category: event.target.value });
+  };
+  handleChange5 = event => {
+    this.setState({ state: event.target.value });
+  };
+
+  handleSubmit = event => {
+    this.insert_incident(
+      this.state.number,
+      this.state.priority,
+      this.state.description,
+      this.state.category,
+      this.state.state,
+      this.state.created
+    );
+
+    alert("A number was submitted: " + this.state.number);
+    event.preventDefault();
   };
   render() {
     if (this.state.incidents_all == null) return <div />;
@@ -177,30 +218,55 @@ class Home extends Component {
     return (
       <tr>
         <td>
-          <input type="text" id="number" name="number"></input>
+          <input
+            type="text"
+            value={this.state.number}
+            onChange={this.handleChange}
+          />
         </td>
         <td>
-          <input type="text" id="priority" name="priority"></input>
+          <input
+            type="text"
+            value={this.state.priority}
+            onChange={this.handleChange2}
+          />
         </td>
         <td>
-          <input type="text" id="sdescription" name="description"></input>
+          <input
+            type="text"
+            value={this.state.description}
+            onChange={this.handleChange3}
+          />
         </td>
         <td>
-          <input type="text" id="category" name="category"></input>
+          <input
+            type="text"
+            value={this.state.category}
+            onChange={this.handleChange4}
+          />
         </td>
+
         <td>
-          <input type="text" id="state" name="state"></input>
-        </td>
-        <td>
-          <input type="text" id="created" name="created"></input>
-        </td>
-        <td>
-          <button
-            variant="primary"
-            onClick={() => {
-              this.add_new_incident();
-            }}
+          <input
+            type="text"
+            value={this.state.state}
+            onChange={this.handleChange5}
+          />
+          {/* <Form.Control
+            as="select"
+            value={this.state.state}
+            onChange={this.handleChange5}
           >
+            <option>Open</option>
+            <option>In Progress</option>
+            <option>Closed</option>
+            <option>Resolved</option>
+          </Form.Control> */}
+        </td>
+        <td>{this.state.created}</td>
+
+        <td>
+          <button variant="primary" onClick={this.handleSubmit}>
             Submit
           </button>
         </td>
@@ -214,8 +280,9 @@ class Home extends Component {
     short_description,
     category,
     state,
-    date
+    created
   ) => {
+    console.log("its happening", state);
     //parameters for insertion:
     const requestOptions = {
       method: "POST",
@@ -226,13 +293,17 @@ class Home extends Component {
         short_description: short_description,
         category: category,
         state: state,
-        created: date
+        sys_created_on: created,
+        active: "true"
       })
     };
     //Attempt to insert
-    fetch(URL + "/insertIncident", requestOptions)
+    fetch(
+      "https://servicenow-ui-coding-challenge-api.netlify.app/.netlify/functions/server/insertIncident",
+      requestOptions
+    )
       .then(response => response.json())
-      .then(data => this.setState({ postId: data.id }));
+      .then(data => this.get_all_data());
   };
 }
 export default App;
