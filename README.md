@@ -55,7 +55,7 @@ Libries: Bootstrap
 
 2. State Management: 
 o What if there’s an error communicating with the server?
-Here is the sample of the error checking communicating with the server
+Here is the sample of the error checking communicating with the server.
 
 ![error_check](https://user-images.githubusercontent.com/29969808/80449400-e8986580-88d3-11ea-8acf-e98c82145336.png)
 
